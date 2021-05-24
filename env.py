@@ -17,8 +17,8 @@ class env():
         self.count = 0#计数，每调用一次setp（） +1
         self.total_reward = 0#累计reward
         self.action_space = np.zeros(625)#记录HB是否被占用
-        self.state =(self.count,self.total_reward,self.action_space,env.port_set_list,env.HB_centre_points,env.HB_upper_left_points)
-        self.state_ =(self.count,self.total_reward,self.action_space,env.port_set_list,env.HB_centre_points,env.HB_upper_left_points)
+        self.state = (self.count, self.total_reward, self.action_space,env.port_set_list, env.HB_centre_points, env.HB_upper_left_points)
+        self.state_ = (self.count, self.total_reward, self.action_space,env.port_set_list, env.HB_centre_points, env.HB_upper_left_points)
         top_connect = pd.read_csv('top_conn' ,header=None, delimiter=r"\s+")
         mother_die = pd.read_csv('mother_die.port_conn.xy' ,header=None, delimiter=r"\s+")
         daughter_die = pd.read_csv('daughter_die.port_conn.xy' ,header=None, delimiter=r"\s+")
