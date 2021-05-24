@@ -17,8 +17,8 @@ class env():
         self.count = 0#计数，每调用一次setp（） +1
         self.total_reward = 0#累计reward
         self.action_space = np.zeros(625)#记录HB是否被占用
-        self.state =(self.count,self.total_reward,self.action_space)
-        self.state_ =(self.count,self.total_reward,self.action_space)
+        self.state =(self.count,self.total_reward,self.action_space,env.port_set_list,env.HB_centre_points,env.HB_upper_left_points)
+        self.state_ =(self.count,self.total_reward,self.action_space,env.port_set_list,env.HB_centre_points,env.HB_upper_left_points)
         top_connect = pd.read_csv('top_conn' ,header=None, delimiter=r"\s+")
         mother_die = pd.read_csv('mother_die.port_conn.xy' ,header=None, delimiter=r"\s+")
         daughter_die = pd.read_csv('daughter_die.port_conn.xy' ,header=None, delimiter=r"\s+")
@@ -58,13 +58,16 @@ class env():
         
 
     def step(self,action):#action 不能大于580 
-        if self.count<len(env.port_set_list):#判断action次数
+        if self.count<len(env.port_set_list) and action<len(env.port_set_list):#判断action次数
+            done = False
+        else:
             done = True
-        if  self.is_hb_empty(action) == True:
+        if  self.is_hb_empty(action) == True and done == False:
             self.count = self.count + 1
             self.action_space[action] = 1
             self.total_reward = -self.calculate_reward(action)
-            self.state_ = (self.count,self.total_reward,self.action_space)
+            ##累计的action次数，累积的reward，hb占用情况，port集合列表，hb中中心坐标，hb左上坐标
+            self.state_ = (self.count,self.total_reward,self.action_space,env.port_set_list,env.HB_centre_points,env.HB_upper_left_points)
             return self.state_, self.total_reward, done
         else:    #重复了state不会有任何变化 
             return self.state_, self.total_reward, done
@@ -73,7 +76,7 @@ class env():
         self.count = 0
         self.total_reward = 0
         self.action_space = np.zeros(625)
-        self.state =(self.count,self.total_reward,self.action_space)
+        self.state =(self.count,self.total_reward,self.action_space,env.port_set_list,env.HB_centre_points,env.HB_upper_left_points)
         return self.state
         
     def is_hb_empty(self,action):
